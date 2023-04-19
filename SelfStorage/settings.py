@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 from environs import Env
@@ -30,6 +31,8 @@ SECRET_KEY = env.str('DJANGO_SECRET_KEY')
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default='localhost')
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Application definition
 
@@ -59,7 +62,7 @@ ROOT_URLCONF = 'SelfStorage.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,6 +73,15 @@ TEMPLATES = [
             ],
         },
     },
+]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATICFILES_DIRS = [
+    BASE_DIR / 'assets/',
 ]
 
 WSGI_APPLICATION = 'SelfStorage.wsgi.application'
