@@ -1,10 +1,9 @@
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Storage(models.Model):
     address = models.CharField('Адрес', max_length=255, db_index=True)
-    description = models.CharField('Описание', max_length=255)
-    direction = models.CharField('Как проехать', max_length=255)
     temperature = models.IntegerField('Температура на складе')
     ceiling_height = models.DecimalField('Высота потолка', max_digits=3, decimal_places=2)
     min_price = models.IntegerField('Минимальная стоимость')
@@ -25,12 +24,13 @@ class Box(models.Model):
     width = models.IntegerField('Ширина')
     height = models.IntegerField('Высота')
     price = models.IntegerField('Стоимость')
-    is_available = models.BooleanField('Доступен')
+    is_available = models.BooleanField('Доступен', default=True)
     storage = models.ForeignKey(
         Storage,
         verbose_name='Склад',
         related_name='boxes',
-        db_index=True
+        db_index=True,
+        on_delete=models.CASCADE
     )
 
     class Meta:
@@ -47,11 +47,13 @@ class Box(models.Model):
 class Contact(models.Model):
     name = models.CharField('Имя', max_length=50)
     phonenumber = PhoneNumberField(verbose_name='Номер телефона', db_index=True)
-    location = models.ForeignKey(
-        Location,
+    storage = models.ForeignKey(
+        Storage,
         verbose_name='Локация',
         related_name='contacts',
-        db_index=True
+        db_index=True,
+        null=True,
+        on_delete=models.SET_NULL
     )
 
     class Meta:
