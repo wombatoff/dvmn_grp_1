@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from storage import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('boxes/', views.view_storages, name='boxes')
 ]

@@ -3,18 +3,21 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Storage(models.Model):
+    locality = models.CharField('Населенный пункт', max_length=50, db_index=True)
     address = models.CharField('Адрес', max_length=255, db_index=True)
+    short_description = models.CharField('Короткое описание', max_length=50)
     temperature = models.IntegerField('Температура на складе')
     ceiling_height = models.DecimalField('Высота потолка', max_digits=3, decimal_places=2)
     min_price = models.IntegerField('Минимальная стоимость')
-    image = models.ImageField('Изображение')
+    first_image = models.ImageField('Основное изображение')
+    second_image = models.ImageField('Второе изображение')
 
     class Meta:
         verbose_name = 'Склад'
         verbose_name_plural = 'Склады'
 
     def __str__(self):
-        return self.address
+        return f'{self.locality} {self.address}'
 
 
 class Box(models.Model):
@@ -22,7 +25,7 @@ class Box(models.Model):
     floor = models.IntegerField('Этаж')
     length = models.IntegerField('Длина')
     width = models.IntegerField('Ширина')
-    height = models.IntegerField('Высота')
+    height = models.DecimalField('Высота', max_digits=2, decimal_places=1)
     price = models.IntegerField('Стоимость')
     is_available = models.BooleanField('Доступен', default=True)
     storage = models.ForeignKey(
@@ -40,25 +43,5 @@ class Box(models.Model):
     def __str__(self):
         return self.number
 
-    def square(self):
-        return self.length * self.width
-
-
-class Contact(models.Model):
-    name = models.CharField('Имя', max_length=50)
-    phonenumber = PhoneNumberField(verbose_name='Номер телефона', db_index=True)
-    storage = models.ForeignKey(
-        Storage,
-        verbose_name='Локация',
-        related_name='contacts',
-        db_index=True,
-        null=True,
-        on_delete=models.SET_NULL
-    )
-
-    class Meta:
-        verbose_name = 'Контакт'
-        verbose_name_plural = 'Контакты'
-
-    def __str__(self):
-        return self.name
+    def volume(self):
+        return self.length * self.width * self.height
