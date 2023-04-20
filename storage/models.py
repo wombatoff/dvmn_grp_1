@@ -43,5 +43,5 @@ class Box(models.Model):
     def __str__(self):
         return self.number
 
-    def volume(self):
-        return self.length * self.width * self.height
+    def square(self):
+        return self.length * self.width

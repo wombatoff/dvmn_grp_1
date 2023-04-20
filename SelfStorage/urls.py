@@ -7,7 +7,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('boxes/', views.view_storages, name='boxes')
+    path('boxes/', views.storages, name='storages'),
+    path('boxes/<int:storage_id>/', views.boxes, name='boxes')
 ]
 
 if settings.DEBUG:
