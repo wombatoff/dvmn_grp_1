@@ -1,6 +1,8 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
+from users.models import CustomUser
+
 
 class Storage(models.Model):
     locality = models.CharField('Населенный пункт', max_length=50, db_index=True)
@@ -45,3 +47,17 @@ class Box(models.Model):
 
     def square(self):
         return self.length * self.width
+
+
+class Rental(models.Model):
+    user = models.ForeignKey(CustomUser, verbose_name='Клиент', on_delete=models.CASCADE)
+    box = models.ForeignKey(Box, verbose_name='Бокс', on_delete=models.CASCADE)
+    rental_date = models.DateField('Дата аренды')
+    rental_period = models.PositiveIntegerField('Срок аренды')
+
+    class Meta:
+        verbose_name = 'Аренда'
+        verbose_name_plural = 'Аренды'
+
+    def __str__(self):
+        return box.number
