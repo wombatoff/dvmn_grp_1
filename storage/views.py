@@ -71,7 +71,7 @@ def storages(request):
 
 
 @login_required
-def boxes(request, storage_id=1):
+def boxes(request, storage_id):
     try:
         selected_storage = Storage.objects.prefetch_related(
             Prefetch('boxes', queryset=Box.objects.filter(is_available=True))
@@ -92,3 +92,4 @@ def boxes(request, storage_id=1):
     context.update(boxes_context)
 
     return render(request, 'storage/boxes.html', context=context)
+

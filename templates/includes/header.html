@@ -18,7 +18,7 @@
 				</li>
 				<li class="nav-item me-5">
 					{% if user.is_authenticated %}
-						<a class="nav-link SelfStorage_black" href="/storage/boxes/">Арендовать бокс</a>
+						<a class="nav-link SelfStorage_black" href="{% url 'storage:storages' %}">Арендовать бокс</a>
 					{% else %}
 						<a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#SignModal">Арендовать бокс</a>
 					{% endif %}
