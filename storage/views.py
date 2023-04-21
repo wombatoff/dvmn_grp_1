@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+
 from django.shortcuts import render, redirect
 from storage.models import Box, Storage
 from django.db.models import Prefetch, Count, Sum
@@ -7,6 +9,7 @@ def index(request):
     return render(request, 'storage/index.html')
 
 
+@login_required
 def my_rent(request):
     return render(request, 'storage/my-rent.html')
 
@@ -17,6 +20,7 @@ def boxes(request):
 
 def faq(request):
     return render(request, 'storage/faq.html')
+
 
 def get_boxes_context(storage):
     storage_boxes = storage.boxes.all()
@@ -47,6 +51,7 @@ def get_boxes_context(storage):
     return context
 
 
+@login_required
 def storages(request):
     storages = Storage.objects.prefetch_related(
         Prefetch('boxes', queryset=Box.objects.filter(is_available=True))
@@ -62,6 +67,7 @@ def storages(request):
     return render(request, 'storage/boxes.html', context)
 
 
+@login_required
 def boxes(request, storage_id=1):
     try:
         selected_storage = Storage.objects.prefetch_related(

@@ -34,6 +34,9 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+LOGIN_URL = 'home'
+LOGIN_REDIRECT_URL = '/?next=/storage/my-rent/'
+
 # Application definition
 
 INSTALLED_APPS = [
