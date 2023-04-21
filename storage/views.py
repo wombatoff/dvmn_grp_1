@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 
 from django.shortcuts import render, redirect
-from storage.models import Box, Storage
+from storage.models import Box, Storage, Rental
 from django.db.models import Prefetch, Count, Sum
 
 
@@ -11,7 +11,10 @@ def index(request):
 
 @login_required
 def my_rent(request):
-    return render(request, 'storage/my-rent.html')
+    user = request.user
+    rentals = Rental.objects.filter(user=user)
+    context = {'rentals': rentals}
+    return render(request, 'storage/my-rent.html', context)
 
 
 def boxes(request):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Storage, Box
+from .models import Storage, Box, Rental
 
 
 class BoxInline(admin.TabularInline):
@@ -15,4 +15,9 @@ class StorageAdmin(admin.ModelAdmin):
 
 @admin.register(Box)
 class BoxAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Rental)
+class RentalAdmin(admin.ModelAdmin):
     pass

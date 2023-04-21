@@ -60,4 +60,4 @@ class Rental(models.Model):
         verbose_name_plural = 'Аренды'
 
     def __str__(self):
-        return box.number
+        return self.box.number
