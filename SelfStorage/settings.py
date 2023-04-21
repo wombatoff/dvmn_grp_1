@@ -30,7 +30,7 @@ SECRET_KEY = env.str('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DJANGO_DEBUG', default=False)
 
-ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default='localhost')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'])
 
 AUTH_USER_MODEL = 'users.CustomUser'
 

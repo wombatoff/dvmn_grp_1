@@ -8,5 +8,7 @@ urlpatterns = [
     path('auth/', include('users.urls', namespace='users')),
     path('storage/', include('storage.urls', namespace='storage')),
     path('', views.index, name='home'),
-
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
