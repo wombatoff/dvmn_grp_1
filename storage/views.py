@@ -3,6 +3,21 @@ from storage.models import Box, Storage
 from django.db.models import Prefetch, Count, Sum
 
 
+def index(request):
+    return render(request, 'storage/index.html')
+
+
+def my_rent(request):
+    return render(request, 'storage/my-rent.html')
+
+
+def boxes(request):
+    return render(request, 'storage/boxes.html')
+
+
+def faq(request):
+    return render(request, 'storage/faq.html')
+
 def get_boxes_context(storage):
     storage_boxes = storage.boxes.all()
 

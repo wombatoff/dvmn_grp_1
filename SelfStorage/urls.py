@@ -1,14 +1,13 @@
 from django.contrib import admin
-from django.urls import path
-from storage import views
-from django.conf.urls.static import static
-from django.conf import settings
+from django.urls import include, path
 
+from storage import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('boxes/', views.storages, name='storages'),
-    path('boxes/<int:storage_id>/', views.boxes, name='boxes')
+    path('auth/', include('users.urls', namespace='users')),
+    path('storage/', include('storage.urls', namespace='storage')),
+    path('', views.index, name='home'),
 ]
 
 if settings.DEBUG:
