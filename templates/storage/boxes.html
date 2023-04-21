@@ -23,7 +23,7 @@
 		<ul class="nav nav-pills mb-3 d-flex justify-content-between" id="boxes-links" role="tablist">
 			{% for storage in storages %}
 			<li class="nav-item flex-grow-1 mx-2" role="presentation">
-				<a href="{% url 'storage:boxes' storage.id %}" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-{{ storage.id }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ storage.id }}" role="tab" aria-controls="pills-{{ storage.id }}" aria-selected="true">
+				<a href="{% url 'storage:boxes' %}{{storage.id}} " class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-{{ storage.id }}-tab" data-bs-toggle="pill" data-bs-target="#pills-{{ storage.id }}" role="tab" aria-controls="pills-{{ storage.id }}" aria-selected="true">
 					<div class="col-12 col-lg-3 d-flex justify-content-center">
 						<img src="{{ storage.second_image.url }}" alt="" class="mb-3 mb-lg-0">
 					</div>
