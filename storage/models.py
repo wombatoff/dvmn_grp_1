@@ -1,4 +1,5 @@
 from django.db import models
+
 from phonenumber_field.modelfields import PhoneNumberField
 
 from users.models import CustomUser
@@ -50,10 +51,11 @@ class Box(models.Model):
 
 
 class Rental(models.Model):
-    user = models.OneToOneField(CustomUser, verbose_name='Клиент', on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(CustomUser, verbose_name='Клиент', on_delete=models.CASCADE, related_name='user')
     box = models.ForeignKey(Box, verbose_name='Бокс', on_delete=models.CASCADE, related_name='rentals')
     start_date = models.DateField('Дата начала аренды')
     end_date = models.DateField('Дата окончания аренды')
+
 
     class Meta:
         verbose_name = 'Аренда'

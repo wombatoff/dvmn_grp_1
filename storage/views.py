@@ -1,8 +1,11 @@
-from django.contrib.auth.decorators import login_required
+from datetime import date, timedelta
 
-from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from storage.models import Box, Storage, Rental
 from django.db.models import Prefetch, Count, Sum
+from .forms import RentalForm
 
 
 def index(request):
@@ -92,3 +95,26 @@ def boxes(request, storage_id):
     context.update(boxes_context)
 
     return render(request, 'storage/boxes.html', context=context)
+
+
+def rent_box(request, box_id):
+    if request.method == 'GET':
+        return render(request, 'storage/create-order.html', {'form': RentalForm()})
+    else:
+        selected_box = get_object_or_404(Box, id=box_id)
+        if not selected_box.is_available:
+            return HttpResponse('Коробка уже занята')
+        form = RentalForm(request.POST)
+        if form.is_valid():
+            form = RentalForm(request.POST)
+            newrental = form.save(commit=False)
+            newrental.user = request.user
+            newrental.box = selected_box
+            newrental.save()
+            selected_box.is_available = False
+            selected_box.save()
+            return redirect('storage:my_rent')
+        else:
+            error = f"Ошибка. Убедидесь что дата начала аренды не раньше {date.today()}," \
+                    f"а дата окончания не раньше {date.today() + timedelta(days=30)}"
+            return render(request, 'storage/create-order.html', {'form': form, 'error': error})

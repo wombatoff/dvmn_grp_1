@@ -1,0 +1,16 @@
+<!--{% extends "base.html" %}-->
+<!--{% load static %}-->
+<!--{% block title %}SelfStorage{% endblock %}-->
+<!--{% block content %}-->
+
+<h1>Заказ бокса</h1>
+
+<h2>{{ error }}</h2>
+
+<form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Арендовать</button>
+</form>
+
+<!--{% endblock %}-->
