@@ -26,7 +26,7 @@
 				<li class="nav-item me-5">
 					{% if user.is_authenticated %}
 						<li class="nav-item me-5">
-							<a class="nav-link SelfStorage_green" href="/storage/my-rent">{{ user.email }}</a>
+							<a class="nav-link SelfStorage_green" href="{% url 'storage:my_rent' %}">{{ user.email }}</a>
 						</li>
 					{% else %}
 						<li class="nav-item me-5">

@@ -92,4 +92,3 @@ def boxes(request, storage_id):
     context.update(boxes_context)
 
     return render(request, 'storage/boxes.html', context=context)
-
