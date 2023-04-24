@@ -1,8 +1,10 @@
-from django.contrib.auth.decorators import login_required
+from datetime import date
 
-from django.shortcuts import render, redirect
-from storage.models import Box, Storage, Rental
-from django.db.models import Prefetch, Count, Sum
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+
+from storage.models import Storage, Orders, Box
+from .forms import RentBoxForm
 
 
 def index(request):
@@ -10,10 +12,10 @@ def index(request):
 
 
 @login_required
-def my_rent(request):
+def my_orders(request):
     user = request.user
-    rentals = Rental.objects.filter(user=user)
-    context = {'rentals': rentals}
+    orders = Orders.objects.filter(user=user)
+    context = {'orders': orders}
     return render(request, 'storage/my-rent.html', context)
 
 
@@ -25,70 +27,56 @@ def faq(request):
     return render(request, 'storage/faq.html')
 
 
-def get_boxes_context(storage):
-    storage_boxes = storage.boxes.all()
-
-    boxes_to_3 = []
-    boxes_to_10 = []
-    boxes_from_10 = []
-
-    for box in storage_boxes:
-        if box.square() < 3:
-            box.sq = box.square()
-            boxes_to_3.append(box)
-        elif box.square() < 10:
-            box.sq = box.square()
-            boxes_to_10.append(box)
-        else:
-            box.sq = box.square()
-            boxes_from_10.append(box)
-
-    all_boxes = boxes_to_3 + boxes_to_10 + boxes_from_10
+@login_required
+def storage(request, storage_id=None):
+    if storage_id is None:
+        current_storage = Storage.objects.first()
+    else:
+        current_storage = get_object_or_404(Storage, id=storage_id)
+    storages = Storage.objects.all()
+    current_boxes = current_storage.boxes.filter(is_available=True)
 
     context = {
-        'boxes_to_3': boxes_to_3,
-        'boxes_to_10': boxes_to_10,
-        'boxes_from_10': boxes_from_10,
-        'all_boxes': all_boxes,
+        'current_storage': current_storage,
+        'storages': storages,
+        'all_boxes': current_boxes,
+        'to_3_boxes': current_boxes.filter(area__lte=3),
+        'to_10_boxes': current_boxes.filter(area__lte=10),
+        'up_10_boxes': current_boxes.filter(area__gt=10),
     }
-    return context
-
-
-@login_required
-def storages(request):
-    storages = Storage.objects.prefetch_related(
-        Prefetch('boxes', queryset=Box.objects.filter(is_available=True))
-    ).annotate(
-        total_boxes=Count('boxes'),
-        available_boxes=Sum('boxes__is_available')
-    )
-    storage = storages[0]
-
-    context = {'storages': storages, 'storage': storage}
-    boxes_context = get_boxes_context(storage)
-    context.update(boxes_context)
     return render(request, 'storage/boxes.html', context)
 
 
 @login_required
-def boxes(request, storage_id=1):
-    try:
-        selected_storage = Storage.objects.prefetch_related(
-            Prefetch('boxes', queryset=Box.objects.filter(is_available=True))
-        ).annotate(total_boxes=Count('boxes'), available_boxes=Sum('boxes__is_available')).get(id=storage_id)
+def rent_box(request, box_id):
+    box = get_object_or_404(Box, id=box_id)
+    user = request.user
 
-    except Storage.DoesNotExist:
-        return redirect('storages')
+    if request.method == 'POST':
+        form = RentBoxForm(request.POST)
 
-    storages = Storage.objects.prefetch_related(
-        Prefetch('boxes', queryset=Box.objects.filter(is_available=True))
-    ).annotate(
-        total_boxes=Count('boxes'),
-        available_boxes=Sum('boxes__is_available')
-    )
+        if form.is_valid():
+            rental_period_months = form.cleaned_data['rental_period_months']
+            phone = form.cleaned_data['phone']
 
-    context = {'selected_storage': selected_storage, 'storages': storages}
-    boxes_context = get_boxes_context(selected_storage)
-    context.update(boxes_context)
+            if phone:
+                user.phone = phone
+                user.save()
 
-    return render(request, 'storage/boxes.html', context=context)
+            order = Orders(
+                user=user,
+                box=box,
+                rental_date=date.today(),
+                rental_period_months=rental_period_months)
+            order.save()
+            box.update_availability()
+            return redirect('storage:order_success')
+
+    else:
+        form = RentBoxForm(initial={'phone': user.phone})
+
+    return render(request, 'storage/rent_box.html', {'form': form, 'box': box})
+
+
+def order_success(request):
+    return render(request, 'storage/order_success.html')

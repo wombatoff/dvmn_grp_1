@@ -12,7 +12,7 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('storage:my_rent')
+            return redirect('storage:current_storage')
         else:
             context = {'error': 'Invalid credentials'}
             return render(request, 'index.html', context)
@@ -30,7 +30,7 @@ def register_view(request):
             user = authenticate(request, username=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('home')
+                return redirect('storage:current_storage')
     else:
         form = CustomUserCreationForm()
     context = {'form': form}

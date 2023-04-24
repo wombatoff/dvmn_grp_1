@@ -16,14 +16,14 @@
 					<div class="row">
 						<div class="col-12 col-sm-5 d-flex flex-column align-items-center">
 							<img src="img/image10.png" class="rounded-pill mb-3" alt="">
-							<h4>{{ user.name }} {{ user.surname }}</h4>
+							<h4>{{ user.name|default:"" }} {{ user.surname|default:"" }}</h4>
 						</div>
 						<div class="col-12 col-sm-7 d-flex flex-column">
 							<form>
 								<label class="fs_24 SelfStorage_green ms-2" for="EMAIL">E-mail</label>
 								<input type="email" name="EMAIL_EDIT" id="EMAIL" class="form-control fs_24 ps-2 SelfStorage__input" value="{{ user.email }}" disabled>
 								<label class="fs_24 SelfStorage_green ms-2" for="PHONE">Телефон</label>
-								<input type="tel" name="PHONE_EDIT" id="PHONE" class="form-control fs_24 ps-2 SelfStorage__input" value="{{ user.phone }}" disabled>
+								<input type="tel" name="PHONE_EDIT" id="PHONE" class="form-control fs_24 ps-2 SelfStorage__input" value="{{ user.phone|default:'' }}" disabled>
 								<label class="fs_24 SelfStorage_green ms-2" for="PASSWORD">Пароль</label>
 								<input type="password" name="PASSWORD_EDIT" id="PASSWORD" class="form-control fs_24 ps-2 SelfStorage__input" value="111111111" disabled>
 								<button type="submit" class="btn SelfStorage_green ps-1" id="save" style="display: none">Сохранить</button>
@@ -54,20 +54,20 @@
 					</div>
 				</div>
 				<div class="tab-pane fade" id="Rent" role="tabpanel" aria-labelledby="Rent-tab">
-					<h1 class="fw-bold SelfStorage_green mb-5">Добрый день, {{ user.name }}!</h1>
+					<h1 class="fw-bold SelfStorage_green mb-5">Добрый день, {{ user.name|default:"Уважаемый Клиент" }}!</h1>
 					<a href="#" class="SelfStorage_orange">История аренды:</a>
 					<!--
 					<h4 class="SelfStorage_grey my-3">Срок Вашей аренды подходит к концу :(<br>Вы можете продлить аренду или забрать вещи до 28 июня 2022 года включительно.</h4>
 					-->
-					{% if rentals %}
-						{% for rental in rentals %}
+					{% if orders %}
+						{% for order in orders %}
 							<div class="mb-5">
-								<h4 class="SelfStorage_green">Мой склад №{{ rental.storage.id }}</h4>
-								<h4>{{ rental.storage.address }}</h4>
-								<h4 class="SelfStorage_green">Мой бокс</h4>
-								<h4>№{{ rental.box.id }}</h4>
+								<h4 class="SelfStorage_green">Cклад:</h4>
+								<h4>{{ order.box.storage.locality }}, {{ order.box.storage.address }}</h4>
+								<h4 class="SelfStorage_green">Бокс</h4>
+								<h4>№{{ order.box.number }}</h4>
 								<h4 class="SelfStorage_green">Срок аренды</h4>
-								<h4>{{ rental.rental_date }} - {{ rental.rental_date }} !!! добавить дату окончания</h4>
+								<h4>{{ order.rental_date }} - {{ order.end_rental_date }}</h4>
 								<div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_green SelfStorage__btn2_green mb-3">Продлить аренду</button></div>
 								<div><button class="btn fs_24 px-5 py-3 text-white border-8 SelfStorage__bg_orange SelfStorage__btn2_orange mb-3">Открыть бокс</button></div>
 								<a href="#" class="SelfStorage_orange">Нужна помощь?</a>

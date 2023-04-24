@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Аренда бокса {{ box.number }}{% endblock %}
+{% block content %}
+<main class="container mt-header">
+    <article class="row">
+        <div class="col-9 col-lg-12 mb-3 mb-lg-0">
+            <h1 class="fw-bold SelfStorage_green mb-5">Аренда бокса № {{ box.number }}</h1>
+            <form class="" method="post">
+                {% csrf_token %}
+                 {{ form.as_p }}
+                <button class="btn border-8 py-3 px-5 w-100 text-white fs_24 SelfStorage__bg_orange SelfStorage__btn2_orange">Арендовать</button>
+                <span class="text-center fw-light">Нажимая на кнопку, вы подтверждаете свое <a href="{% static 'spd.pdf' %}" class="link-dark">согласие на обработку персональных данных</a></span>
+            </form>
+        </div>
+    </article>
+</main>
+{% endblock %}

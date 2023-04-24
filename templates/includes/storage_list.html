@@ -1,0 +1,29 @@
+{% load static %}
+<article class="mt-header">
+    <h1 class="text-center fw-bold SelfStorage_green mb-5">Аренда боксов</h1>
+    <h6 class="text-center SelfStorage_grey">Арендуйте склад индивидуального хранения по уникальной цене прямо сейчас</h6>
+    <a href="#BOX" id="toBox" class="d-none"></a>
+    <ul class="nav nav-pills mb-3 d-flex justify-content-between" id="boxes-links" role="tablist">
+        {% for storage in storages %}
+        <li class="nav-item flex-grow-1 mx-2" role="presentation">
+            <a href="{% url 'storage:storage_detail' storage_id=storage.id %}" class="row text-decoration-none py-3 px-4 mt-5 SelfStorage__boxlink" id="pills-{{ storage.id }}-tab">
+                <div class="col-12 col-lg-3 d-flex justify-content-center">
+                    <img src="{{ storage.small_image.url }}" alt="" class="mb-3 mb-lg-0">
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
+                    <h4 class="text-center">{{ storage.locality }}</h4>
+                    <h6 class="text-center">{{ storage.address }}</h6>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
+                    <h4 class="text-center">{{ storage.total_boxes_count }} из {{ storage.available_boxes_count }}</h4>
+                    <h6 class="text-center">Боксов свободно</h6>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 d-flex flex-column justify-content-center">
+                    <h4 class="text-center SelfStorage_green">от {{ storage.min_boxing_price }} ₽</h4>
+                    <h6 class="text-center">{{ storage.short_description }}</h6>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</article>

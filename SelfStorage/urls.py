@@ -8,7 +8,7 @@ from storage import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('users.urls', namespace='users')),
-    path('storage/', include('storage.urls', namespace='storage')),
+    path('storage/', include('storage.urls', namespace='storage'), name='storage_home'),
     path('', views.index, name='home'),
 ]
 
