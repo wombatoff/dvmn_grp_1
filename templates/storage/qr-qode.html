@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}SelfStorage{% endblock %}
+{% block content %}
+<main class="container mt-header">
+    <article class="row">
+        <div style="text-align: center;">
+          <h1 class="fw-bold SelfStorage_green mb-5">Отсканируйте QR-код для просмотра номера бокса</h1>
+          <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+        </div>
+    </article>
+</main>
+{% endblock %}

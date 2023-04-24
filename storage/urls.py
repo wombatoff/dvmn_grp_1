@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:storage_id>/', views.storage, name='storage_detail'),
     path('order_success/', views.order_success, name='order_success'),
     path('faq/', views.faq, name='faq'),
+    path('qr-code/<int:box_id>/', views.qr_code, name='qr_code')
 ]

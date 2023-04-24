@@ -1,5 +1,8 @@
+import base64
 from datetime import date
 
+import qrcode
+from io import BytesIO
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
 
@@ -80,3 +83,25 @@ def rent_box(request, box_id):
 
 def order_success(request):
     return render(request, 'storage/order_success.html')
+
+@login_required
+def qr_code(request, box_id):
+    box = get_object_or_404(Box, id=box_id)
+    qr_code_data = box.number
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(qr_code_data)
+    qr.make(fit=True)
+    qr_img = qr.make_image(fill_color="black", back_color="white")
+
+    img_io = BytesIO()
+    qr_img.save(img_io, format='PNG')
+    img_io.seek(0)
+    qr_bytes = img_io.read()
+    qr_base64 = base64.b64encode(qr_bytes).decode('utf-8')
+
+    return render(request, 'storage/qr-qode.html', context={'qr_code': qr_base64})
