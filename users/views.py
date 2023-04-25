@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
 
 from users.forms import CustomUserCreationForm
 
@@ -12,12 +13,12 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('storage:current_storage')
+            return redirect('home')
         else:
             context = {'error': 'Invalid credentials'}
-            return render(request, 'index.html', context)
+            return redirect('home')
     else:
-        return render(request, 'index.html')
+        return redirect('home')
 
 
 def register_view(request):
@@ -34,7 +35,7 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
     context = {'form': form}
-    return render(request, 'registration/register.html', context)
+    return render(request, 'home.html', context)
 
 
 @login_required

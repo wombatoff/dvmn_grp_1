@@ -1,11 +1,11 @@
 import base64
 from datetime import date
+from io import BytesIO
 
 import qrcode
-from io import BytesIO
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
 from django.core.mail import EmailMessage
+from django.shortcuts import render, get_object_or_404, redirect
 
 from storage.models import Storage, Orders, Box
 from .forms import RentBoxForm
@@ -21,10 +21,6 @@ def my_orders(request):
     orders = Orders.objects.filter(user=user)
     context = {'orders': orders}
     return render(request, 'storage/my-rent.html', context)
-
-
-def boxes(request):
-    return render(request, 'storage/boxes.html')
 
 
 def faq(request):
@@ -84,6 +80,7 @@ def rent_box(request, box_id):
 
 def order_success(request):
     return render(request, 'storage/order_success.html')
+
 
 @login_required
 def qr_code(request, box_id):
