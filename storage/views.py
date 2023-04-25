@@ -5,6 +5,7 @@ import qrcode
 from io import BytesIO
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404, redirect
+from django.core.mail import EmailMessage
 
 from storage.models import Storage, Orders, Box
 from .forms import RentBoxForm
@@ -87,6 +88,7 @@ def order_success(request):
 @login_required
 def qr_code(request, box_id):
     box = get_object_or_404(Box, id=box_id)
+    user = request.user
     qr_code_data = box.number
     qr = qrcode.QRCode(
         version=1,
@@ -103,5 +105,10 @@ def qr_code(request, box_id):
     img_io.seek(0)
     qr_bytes = img_io.read()
     qr_base64 = base64.b64encode(qr_bytes).decode('utf-8')
-
+    email = EmailMessage(
+        body='Отсканируйте QR-код для просмотра бокса',
+        to=[f'{user.email}'],
+    )
+    email.attach('qr-code', qr_bytes, 'image/png')
+    email.send(fail_silently=False)
     return render(request, 'storage/qr-qode.html', context={'qr_code': qr_base64})
